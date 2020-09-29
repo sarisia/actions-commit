@@ -1,0 +1,41 @@
+name: git commit & push
+description: Do git commit and push
+author: sarisia
+
+inputs:
+  name:
+    description: git user.name
+    required: false
+    default: ${{ github.actor }}
+  email:
+    description: git user.email
+    required: false
+    default: ${{ github.actor }}@users.noreply.github.com
+  message:
+    description: commit message
+    required: false
+    default: update
+
+outputs:
+  changed:
+    description: repository has changes or not
+    value: ${{ steps.commit.outputs.changed }}
+
+runs:
+  using: composite
+  steps:
+    - name: configure git
+      shell: bash
+      run: |
+        git config --global user.name "${{ inputs.name }}"
+        git config --global user.email "${{ inputs.email }}"
+    - name: stage & commit
+      id: commit
+      shell: bash
+      run: |
+        git add .
+        git commit -m "${{ inputs.message }}" || IS_CHANGED=0
+        echo "::set-output name=changed::${IS_CHANGED:-1}"
+    - name: push
+      shell: bash
+      run: git push
