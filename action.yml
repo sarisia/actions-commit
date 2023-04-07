@@ -35,7 +35,7 @@ runs:
       run: |
         git add .
         git commit -m "${{ inputs.message }}" || IS_CHANGED=0
-        echo "::set-output name=changed::${IS_CHANGED:-1}"
+        echo "changed=${IS_CHANGED:-1}" >> $GITHUB_OUTPUT
     - name: push
       shell: bash
       run: git push
