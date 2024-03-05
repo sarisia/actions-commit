@@ -33,6 +33,7 @@ runs:
       id: commit
       shell: bash
       run: |
+        git pull
         git add .
         git commit -m "${{ inputs.message }}" || IS_CHANGED=0
         echo "changed=${IS_CHANGED:-1}" >> $GITHUB_OUTPUT
